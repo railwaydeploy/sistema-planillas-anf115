@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+    {%load static%}
+<head>
+    <style>
+        .page-break {
+            page-break-before: always;
+        }
+        .title {
+            padding-top: 10px;
+            padding-left: 5px;
+            font-size: 20px;
+        }
+        .title-group {
+            font-size: 15px;
+            font-style: italic;
+            background-color: lightsteelblue;
+            padding-top: 8px;
+            padding-left: 3px;
+        }
+        
+        .header-container {
+            position: relative;
+        }
+
+        /* Estilo para la imagen */
+
+        .header-image1 {
+            width: 10px;
+            height: 10px;
+        }
+
+        .image-text-group { /* Espacio entre la imagen y el texto */
+        }
+        /* Estilo para el encabezado h1 */
+        h1 {
+            margin-left: 100px; /* Deja espacio a la derecha de la imagen para el h1 */
+            display: inline-block; /* Permite que el h1 esté en la misma línea que la imagen */
+        }
+        .h2 {
+            font-size: 13px;
+        }
+        
+        .subrayado{
+            text-decoration: underline;
+        }
+        .table1{
+            align-items: center;
+            border-spacing: 0;
+            border-collapse: collapse;
+            width: 100%;
+            margin: 0 auto;
+
+        }
+        .table1 th{
+            padding: 7px;
+            background-color: gray;
+            color:white;
+            text-align: center;
+            border: 1px solid #000;
+        }
+        .table1 td{
+            padding: 5px;
+            text-align: center;
+            border: 1px solid #000;
+        }
+        .mytable2 td{
+            padding:2px;
+        }
+
+        td.nombre {
+        white-space: nowrap; /* Evita que el texto se divida en varias líneas */
+        overflow: hidden; /* Oculta el exceso de texto que no cabe en la celda */
+        text-overflow: ellipsis; /* Agrega puntos suspensivos (...) al final del texto que no cabe */
+        }
+  
+
+        /* Estilo para las filas impares (excluyendo la última fila) */
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            background: steelblue;
+        }
+
+        .item {
+            background: grey;
+        }
+        .CenterDiv{
+            border-radius:4px;
+            max-width:1600px; 
+            width:100%;
+            margin:0 auto;
+        }
+
+        .brTables{
+            padding: -3px;
+        }
+        @page {
+            size: a4 landscape;
+            @frame header_frame {          
+                -pdf-frame-content: header_content;
+                left: 50pt; width: 138pt; top: 50pt; height: 40pt;
+            }
+            @frame content_frame {         
+                left: 50pt; width: 770pt; /* Ajusta el ancho para la orientación horizontal */
+                top: 90pt; height: 512pt; /* Ajusta el alto para la orientación horizontal */
+            }
+            @frame footer_frame {         
+                -pdf-frame-content: footer_content;
+                left: 50pt; width: 770pt; /* Ajusta el ancho para la orientación horizontal */
+                top: 602pt; height: 30pt; /* Ajusta el alto para la orientación horizontal */
+            }
+        }
+
+        /* Estilos para la segunda tabla */
+    </style>
+</head>
+{%block content%}
+
+<table style="border:0px">
+    <tbody>
+        <tr>
+            <td style="width:120px">
+                <img style="width:120px;height:120px" src="http://localhost:8000{%static 'assets/img/logo.jpg'%}" alt="asdasd" class="header-image">
+            </td>
+            <td>
+                <h1 style="font-size:30px;">Lubriaccesorios España</h1>
+                <p>
+        
+                    <div style="font-size:16px;border-style:none;">
+                        <b>Lubriaccesorios España</b>
+                    </div>
+                    
+                    <span class="image-text-group">
+                        <b>Telefono:</b> 7105-6703
+                    </span>
+                    <span class="image-text-group">
+                        <b>Email:</b> gptinnova2025@gmail.com
+                    </span>
+                    
+                    <span class="image-text-group">
+                        <b>Instagram:</b> leryunard
+                    </span> 
+                    <div class="">
+                        <span><b>Dirección:</b> Clle. del Cantábrico,Peatonal UCA.</span>
+                    </div>  
+                </p>
+            </td>
+        </tr>
+    </tobdy>
+</table>
+
+<table style="margin-top:20px;" class="">
+    <tr style="background-color:gray;height:30px; align-items: center;">
+        <td>
+            <h1 style="color:white;font-size:20px; text-align: center;">&nbsp Planilla de Pagos</h1>
+        </td>
+    </tr>
+</table>
+
+<br>
+<table class="table1">
+    <tr>
+        <th style="width: 30px;" rowspan="2">#</th>
+        <th rowspan="2">Nombre</th>
+        <th rowspan="2">Cargo</th>
+        <th rowspan="2">Sueldo Base Diario</th>
+        <th rowspan="2">Dias trabajados</th>
+        <th rowspan="2">Horas extras Diurnas</th>
+        <th rowspan="2">Horas extras nocturnas</th>
+        <th rowspan="2">Total horas extras</th>
+        <th rowspan="2">Sub Total</th>
+        <th colspan="3">Retenciones</th>
+        <th rowspan="2" class="nombre">Otras deduciones</th>
+        <th rowspan="2">Liquido a pagar</th>
+    </tr>
+    <tr>
+        <td style="background-color: gray; color: white; font-weight: bold;">ISSS</td>
+        <td style="background-color: gray; color: white; font-weight: bold;">AFP</td>
+        <td style="background-color: gray; color: white; font-weight: bold;">RENTA</td>
+    </tr>
+    <tr>
+        <td>100</td>
+        <td class="space">Kevin Moran</td>
+        <td>Ingeniero</td>
+        <td>$100</td>
+        <td>4</td>
+        <td>5</td>
+        <td>6</td>
+        <td>7</td>
+        <td>8</td>
+        <td>8</td>
+        <td>8</td>
+        <td>8</td>
+        <td>8</td>
+        <td>8</td>
+    </tr>
+    <tr>
+        <td>2</td>
+        <td class="space">Diego Perla</td>
+        <td>Ingeniero</td>
+        <td>$200</td>
+        <td>4</td>
+        <td>5</td>
+        <td>6</td>
+        <td>7</td>
+        <td>8</td>
+        <td>8</td>
+        <td>8</td>
+        <td>8</td>
+        <td>8</td>
+        <td>8</td>
+    </tr>
+</table>    
+
+<table style="margin-top:20px;" class="">
+    <tr style="background-color:gray;height:20px">
+        <td>
+            <h1 style="color:white;font-size:15px">&nbsp Resumen</h1>
+        </td>
+
+    </tr>
+</table>
+
+<div class="CenterDiv">
+    <p></p>
+    <p class="subrayado"><b>Periodo trabajado desde: </b>26 del Junio del 2022</p>
+    <p class="subrayado"><b>Periodo trabajado hasta: </b>26 de Julio del 2022</p>
+
+<div id="footer_frame">
+    <p><b>Realizado Por: </b>Kevin Morán <b> | Fecha de impresión: </b> 23/05/2023</p>
+</div>
+
+</div>
+{%endblock%}
+

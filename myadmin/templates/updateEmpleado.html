@@ -1,0 +1,75 @@
+{%extends 'base.html'%} {%load widget_tweaks%}
+
+{%block content%}
+<div class="p-5">
+    <div class="mb-5">
+        <h1><i class="fa-solid fa-user me-3"></i>Registrar empleado</h1>
+    </div>
+
+    <div class="px-4">
+        <form id="orderForm" data-lista-url="{% url 'myadmin:ajax_load_munis' %}" class="form form-control p-3" method="POST">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-4">
+                <h5 class="mb-2">Nombre: </h5>
+                {%render_field form.nombre class="form-control mb-4"%}
+            </div>
+            <div class="col-4">
+                <h5 class="mb-2">Apellido: </h5>
+                {%render_field form.apellidos class="form-control mb-4"%}
+            </div>
+            <div class="col-4">
+                <h5 class="mb-2">Documento: </h5>
+                {%render_field form.documento class="form-control mb-4"%}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-2">
+                <h5 class="mb-2">Telefono: </h5>
+                {%render_field form.telefono class="form-control mb-4"%}
+            </div>
+            <div class="col-5">
+                <h5 class="mb-2">Departamento: </h5>
+                {%render_field form.departamento class="form-control mb-4"%}
+            </div>
+            <div class="col-5">
+                <h5 class="mb-2">Municipio: </h5>
+                {%render_field form.FK_municipio id="id_municipio" class="form-control mb-4"%}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <h5 class="mb-2">Dirección: </h5>
+                {%render_field form.direccion class="form-control mb-4"%}
+            </div>
+            <div class="col-6">
+                <h5 class="mb-2">Cargo: </h5>
+                {%render_field form.cargo class="form-control mb-4"%}
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Registrar empleado</button>
+        <a href="{%url 'myadmin:EmpleadoList'%}"><button value="SAVE" type="button" class="btn btn-secondary">Cancelar</button></a>
+        </form>
+    </div>
+
+
+</div>
+<script>
+    $("#id_departamento").change(function () {
+      var url_p = $("#orderForm").attr("data-lista-url"); // get the url of the `load_cities` view
+      var listaId = $(this).val(); // get the selected country ID from the HTML input
+  
+      $.ajax({
+        // initialize an AJAX request
+        url: url_p, // set the url of the request (= localhost:8000/hr/ajax/load-cities/)
+        data: {
+          departamento: listaId, // add the country id to the GET parameters
+        },
+        success: function (data) {
+          // `data` is the return of the `load_cities` view function
+          $("#id_municipio").html(data); // replace the contents of the city input with the data that came from the server
+        },
+      });
+    });
+</script>
+{% endblock %}

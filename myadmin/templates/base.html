@@ -1,0 +1,509 @@
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
+    <title>Dashboard - SB Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet"/>
+    <link href="{% static 'css/styles.css' %}" rel="stylesheet"/>
+
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+            crossorigin="anonymous"></script>
+    <script src="{% static 'js/scripts.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
+    <script src="{% static 'assets/demo/chart-area-demo.js' %}"></script>
+    <script src="{% static 'assets/demo/chart-bar-demo.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js"
+            crossorigin="anonymous"></script>
+    <script src="{% static 'js/datatables-simple-demo.js' %}"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/daterangepicker@2.1.27/daterangepicker.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+
+    {% block js %}
+    {% endblock %}
+
+    <!-- ===================== -->
+    <!--   Estilos (tema claro) -->
+    <!-- ===================== -->
+    <style>
+        /* Variables y base */
+        :root {
+            --bg: #f5f7fb;
+            --surface: #ffffff;
+            --surface-2: #f8fafc;
+            --border: #e5e9f2;
+            --text: #0f172a;
+            --muted: #64748b;
+            --primary: #2563eb;
+            --primary-2: #06b6d4;
+            --ok: #16a34a;
+            --warn: #ca8a04;
+            --danger: #dc2626;
+            --radius: 14px;
+            --radius-sm: 10px;
+            --shadow: 0 10px 28px rgba(15, 23, 42, .06);
+            --ring: 0 0 0 3px rgba(37, 99, 235, .22);
+            --speed: .28s;
+        }
+
+        html, body {
+            height: 100%
+        }
+
+        body {
+            background: radial-gradient(1200px 600px at -10% -20%, #93c5fd33, transparent 60%),
+            radial-gradient(800px 600px at 110% -10%, #a5f3fc33, transparent 60%),
+            linear-gradient(180deg, var(--bg) 0%, #eef2f9 100%);
+            color: var(--text);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* ============ NAVBAR SUPERIOR (claro) ============ */
+        .navbar.bg-dark {
+            background: var(--surface) !important;
+            border-bottom: 1px solid var(--border);
+            color: var(--text);
+            backdrop-filter: saturate(1.1);
+        }
+
+        .navbar .navbar-brand {
+            color: var(--text);
+            font-weight: 700;
+            letter-spacing: .3px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .navbar .navbar-brand::before {
+            content: "";
+            width: 26px;
+            height: 26px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-2));
+            box-shadow: inset 0 0 0 2px #ffffff, var(--shadow);
+        }
+
+        .navbar .nav-link, .navbar .dropdown-toggle, .navbar .fa-user {
+            color: var(--text) !important;
+            opacity: .9
+        }
+
+        #sidebarToggle {
+            border-radius: 10px;
+            border: 1px solid var(--border) !important;
+            background: #f3f6fd !important;
+            width: 40px;
+            height: 40px;
+            display: grid;
+            place-items: center;
+            color: var(--text) !important;
+            transition: transform var(--speed), background var(--speed), border-color var(--speed), box-shadow var(--speed);
+        }
+
+        #sidebarToggle:hover {
+            transform: translateY(-1px);
+            background: #eef2ff !important;
+            border-color: #c7d2fe !important;
+            box-shadow: var(--ring);
+        }
+
+        .navbar .dropdown-menu {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 8px;
+            box-shadow: var(--shadow);
+        }
+
+        .navbar .dropdown-item {
+            color: var(--muted);
+            border-radius: 10px;
+            margin: 2px 4px
+        }
+
+        .navbar .dropdown-item:hover {
+            background: #eef2ff;
+            color: #111827
+        }
+
+        /* ============ LAYOUT GENERAL ============ */
+        /* Mover el menú a la derecha con row-reverse, sin tocar el HTML */
+        #layoutSidenav {
+            display: flex;
+            flex-direction: row-reverse; /* << menú a la derecha */
+            min-height: 100vh;
+        }
+
+        /* Área de contenido */
+        #layoutSidenav_content {
+            background: radial-gradient(600px 300px at 0% 0%, #93c5fd22, transparent 60%),
+            radial-gradient(600px 300px at 100% 0%, #a5f3fc22, transparent 60%);
+            padding: 18px 20px 48px;
+            animation: fade-slide .35s ease-out both;
+        }
+
+        @keyframes fade-slide {
+            from {
+                opacity: 0;
+                transform: translateY(8px)
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0)
+            }
+        }
+
+        /* ============ SIDEBAR (ahora a la derecha) ============ */
+        .sb-sidenav.sb-sidenav-dark {
+            background: var(--surface);
+            color: var(--text);
+            border-left: 1px solid var(--border); /* divisor a la izquierda del panel derecho */
+            border-right: 0; /* sin divisor derecho */
+            box-shadow: none;
+        }
+
+        .sb-sidenav .sb-sidenav-menu {
+            padding-top: .5rem;
+        }
+
+        .sb-sidenav .sb-sidenav-menu .nav .sb-sidenav-menu-heading {
+            color: #334155;
+            font-weight: 700;
+            letter-spacing: .2px;
+            text-transform: uppercase;
+            font-size: .8rem;
+            margin: 12px 12px 6px;
+        }
+
+        .sb-sidenav .sb-sidenav-menu .nav .nav-link {
+            color: #0f172a;
+            border: 1px solid transparent;
+            border-radius: 12px;
+            margin: 6px 10px;
+            padding: 10px 12px;
+            transition: background var(--speed), transform var(--speed), border-color var(--speed), color var(--speed), box-shadow var(--speed);
+        }
+
+        .sb-sidenav .sb-sidenav-menu .nav .nav-link:hover {
+            background: #f1f5ff;
+            border-color: #dbeafe;
+            transform: translateX(-2px); /* se acerca hacia el contenido */
+            color: #0b1220;
+            box-shadow: 0 1px 0 rgba(37, 99, 235, .08);
+        }
+
+        .sb-sidenav .sb-nav-link-icon {
+            width: 28px;
+            display: inline-grid;
+            place-items: center;
+            opacity: .9;
+            color: #334155;
+        }
+
+        .sb-sidenav .sb-sidenav-menu .nav .collapsed .sb-sidenav-collapse-arrow {
+            transition: transform var(--speed), opacity var(--speed);
+            opacity: .8;
+            color: #334155;
+        }
+
+        .sb-sidenav .sb-sidenav-menu .nav .nav-link[aria-expanded="true"] .sb-sidenav-collapse-arrow {
+            transform: rotate(-90deg); /* abre hacia la izquierda porque está a la derecha */
+        }
+
+        .sb-sidenav .sb-sidenav-menu .nav .sb-sidenav-menu-nested .nav-link {
+            color: #334155;
+            border-radius: 10px;
+            margin: 4px 16px;
+            padding: 8px 10px;
+        }
+
+        .sb-sidenav .sb-sidenav-menu .nav .sb-sidenav-menu-nested .nav-link:hover {
+            background: #eef2ff;
+            color: #0f172a;
+        }
+
+        .sb-sidenav .sb-sidenav-footer {
+            background: #fafafa;
+            border-top: 1px dashed var(--border);
+            color: #334155;
+        }
+
+        /* Estado activo en el menú (claro) */
+        .sb-sidenav .nav-link.active {
+            background: linear-gradient(90deg, #eef2ff, transparent);
+            border-color: #c7d2fe;
+            color: #111827;
+            box-shadow: inset -2px 0 0 var(--primary); /* borde interno del lado del contenido */
+        }
+
+        /* ============ TIPOGRAFÍA/UTILIDADES ============ */
+        h1, h2, h3, h4 {
+            color: #0f172a
+        }
+
+        .text-muted {
+            color: var(--muted) !important
+        }
+
+        /* ============ TABLAS (incluye Simple-DataTables) ============ */
+        table, .datatable-table {
+            border-collapse: collapse;
+            width: 100%;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        thead th, .datatable-table thead th {
+            background: #f8fafc;
+            color: #7da9e7;
+            font-size: .85rem;
+            text-transform: uppercase;
+            letter-spacing: .2px;
+            padding: 12px;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+
+        tbody td, .datatable-table tbody td {
+            padding: 12px;
+            border-bottom: 1px dashed var(--border);
+            color: #1f2937;
+        }
+
+        tbody tr {
+            transition: background var(--speed), transform var(--speed)
+        }
+
+        tbody tr:hover {
+            background: #f9fbff;
+            transform: translateY(-1px)
+        }
+
+        .datatable-wrapper .datatable-top {
+            color: var(--muted)
+        }
+
+        .datatable-selector, .datatable-input {
+            background: #fff;
+            border: 1px solid var(--border);
+            color: #0f172a;
+            border-radius: 10px;
+            padding: 8px 10px;
+        }
+
+        .datatable-pagination a {
+            border-radius: 8px
+        }
+
+        /* ============ BOTONES (override suave Bootstrap) ============ */
+        .btn {
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            background: #5f97e1;
+            color: #0f172a;
+            transition: transform var(--speed), background var(--speed), border-color var(--speed), box-shadow var(--speed), color var(--speed);
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            background: #195bff;
+            border-color: #c7d2fe;
+            box-shadow: var(--ring);
+            color: #0b1220;
+        }
+
+        .btn-primary {
+            background: linear-gradient(90deg, var(--primary), var(--primary-2));
+            border: none;
+            color: #ffffff;
+        }
+
+        .btn-primary:hover {
+            filter: brightness(1.05) saturate(1.05)
+        }
+
+        /* ============ FORM CONTROLS ============ */
+        .form-control, input[type="search"], input[type="text"], input[type="date"], select {
+            background: #fff;
+            border: 1px solid var(--border);
+            color: #0f172a;
+            border-radius: 12px;
+            padding: 10px 12px;
+            outline: none;
+            transition: border-color var(--speed), box-shadow var(--speed), background var(--speed);
+        }
+
+        .form-control:focus, input:focus, select:focus {
+            border-color: #c7d2fe;
+            box-shadow: var(--ring)
+        }
+
+        /* ============ DROPDOWNS / BADGES / CARDS ============ */
+        .dropdown-menu {
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            box-shadow: var(--shadow);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: .35rem .6rem;
+            border-radius: 999px;
+            font-size: .78rem;
+            background: #eef2ff;
+            border: 1px solid #c7d2fe;
+            color: #1e3a8a;
+        }
+
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+
+        /* ============ SCROLLBAR ============ */
+        ::-webkit-scrollbar {
+            height: 10px;
+            width: 10px
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 999px
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8
+        }
+
+        /* Sutilezas de animación */
+        .sb-sidenav .nav-link, #sidebarToggle, .btn, .dropdown-item {
+            will-change: transform, background-color
+        }
+
+        @keyframes pop {
+            from {
+                transform: translateY(-4px);
+                opacity: 0
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1
+            }
+        }
+    </style>
+</head>
+<body class="sb-nav-fixed">
+<nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+    <!-- Sidebar Toggle-->
+    <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" style="margin-left: 30px" id="sidebarToggle" href="#!"><i
+            class="fas fa-bars"></i></button>
+    <!-- Navbar Brand-->
+    <a class="navbar-brand ps-3" href="">LESGP</a>
+    <!-- Navbar Search-->
+    <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
+    </form>
+    <!-- Navbar-->
+    <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown"
+               aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item" href="#!">Mi Perfil</a></li>
+                <li><a class="dropdown-item" href="{% url 'logout' %}">Cerrar Sesión</a></li>
+            </ul>
+        </li>
+    </ul>
+</nav>
+
+<div id="layoutSidenav">
+    <div id="layoutSidenav_nav">
+        <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+            <div class="sb-sidenav-menu">
+                <div class="nav">
+                    <div class="sb-sidenav-menu-heading">Sistema de planilla</div>
+                    <a class="nav-link" href="{% url 'myadmin:inicio' %}">
+                        <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                        Inicio
+                    </a>
+                    <div class="sb-sidenav-menu-heading">Gestiones</div>
+
+                    <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts"
+                       aria-expanded="false" aria-controls="collapseLayouts">
+                        <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
+                        Registro
+                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                    </a>
+                    <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne"
+                         data-bs-parent="#sidenavAccordion">
+                        <nav class="sb-sidenav-menu-nested nav">
+                            <a class="nav-link" href="{% url 'myadmin:AdministradorList' %}">Administrador</a>
+                            <a class="nav-link" href="{% url 'myadmin:EmpleadoList' %}">Empleado</a>
+                        </nav>
+                    </div>
+
+                    <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseListas"
+                       aria-expanded="false" aria-controls="collapseListas">
+                        <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
+                        Listas
+                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                    </a>
+                    <div class="collapse" id="collapseListas" aria-labelledby="headingOne"
+                         data-bs-parent="#sidenavAccordion">
+                        <nav class="sb-sidenav-menu-nested nav">
+                            <a class="nav-link" href="{% url 'myadmin:DepartamentoList' %}">Departamentos</a>
+                        </nav>
+                    </div>
+                    <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePages"
+                       aria-expanded="false" aria-controls="collapsePages">
+                        <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
+                        Planilla
+                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                    </a>
+                    <div class="collapse" id="collapsePages" aria-labelledby="headingTwo"
+                         data-bs-parent="#sidenavAccordion">
+                        <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
+                            <a class="nav-link" href="{% url 'myadmin:PlanillaList' %}"
+                               aria-controls="pagesCollapseError">
+                                Planilla
+
+                            </a>
+                        </nav>
+                    </div>
+                    <div class="sb-sidenav-menu-heading">Generar reporte PDF</div>
+                    <a class="nav-link" href="{% url 'myadmin:generate_pdf' %}">Reporte de empleado</a>
+                    <a class="nav-link" href="{% url 'myadmin:generar_pdf_empleados' %}">Reporte de planilla</a>
+                </div>
+            </div>
+            {% if user.first_name and user.last_name %}
+                <div class="sb-sidenav-footer">
+                    <div class="small">Logeado como:</div>
+                    {{ user.first_name }} {{ user.last_name }}
+                </div>
+            {% endif %}
+        </nav>
+    </div>
+    <div id="layoutSidenav_content">
+        {% block content %}
+
+        {% endblock %}
+    </div>
+</body>
+</html>

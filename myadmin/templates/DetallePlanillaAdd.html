@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{%load widget_tweaks%}
+{% block content %}
+
+<div class="p-5">
+    <div class="mb-5">
+        <h1><i class="fa-regular fa-clipboard"></i> Agregar empleado a la planilla</h1>
+    </div>
+
+    <div class="px-4">
+        <form id="orderForm" class="form form-control p-3" method="POST" />
+        {% csrf_token %}
+        <h4>Asignacion de planilla</h4>
+        <div class="row">
+            <div class="col-md-6">
+                <h5>Fecha de la planilla:</h5>
+                    {%render_field form.FK_planilla class="form-control mb-4"%}
+            </div>
+        </div>
+
+        <h4>Detalle del pago</h4>
+        <div class="row">
+            <div class="col-md-6">
+                <h5>Empleado: </h5>
+                {%render_field form.FK_empleado class="form-control mb-4"%}
+            </div>
+            <div class="col-md-6">
+                <h5 class="mb-2">Sueldo:</h5>
+                {%render_field form.sueldo_base class="form-control mb-4"%}
+            </div>
+        </div>
+
+
+        <button type="submit" class="btn btn-primary">Registrar administrador</button>
+        <a href="{%url 'myadmin:AdministradorList'%}"><button type="button" class="btn btn-secondary">Cancelar</button></a>
+        </form>
+    </div>
+{% endblock %}

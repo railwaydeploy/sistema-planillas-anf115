@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+{%load filter_functions%}{%load widget_tweaks%}
+{% block content %}
+<div class="p-5">
+    <h1>Generar planilla de empleado</h1>
+<div class="p-2">
+    <form method="POST" class="form form-control p-4">
+        {%csrf_token%}
+
+        <div class="row">
+            <div class="col-4">
+                <h5>Empleado:</h5>
+                <div class="input-group">
+                    <span class="input-group-text">
+                        <i class="fa fa-user"></i>
+                    </span>
+                    {%render_field form.empleado class="form-control" id="id_receptor" %}
+                    <button type="button" class="btn btn-primary input-group-text" data-bs-toggle="modal" data-bs-target="#miModal">
+                        +
+                    </button>
+                </div>
+
+            </div>
+            <div class="col-8">
+                <h5>Fecha: </h5>
+                <div class="input-group">
+                    <span class="input-group-text">
+                        <i class="fa fa-calendar"></i>
+                    </span>
+                    {%render_field form.fecha id="datepicker" class="form-control "%}
+                </div>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-4">
+                <h5>Horas trabajadas:</h5>
+                <div class="input-group">
+                    <span class="input-group-text">
+                        <i class="fa-regular fa-clock"></i>
+                    </span>
+                    {%render_field form.horasExtra class="form-control" id="id_receptor" %}
+                </div>
+
+            </div>
+            <div class="col-4">
+                <h5>Dias trabajados: </h5>
+                <div class="input-group">
+                    <span class="input-group-text">
+                        <i class="fa fa-calendar"></i>
+                    </span>
+                    {%render_field form.diasTrabajados class="form-control "%}
+                </div>
+            </div>
+            <div class="col-4">
+                <h5>Dias vacacionados: </h5>
+                <div class="input-group">
+                    <span class="input-group-text">
+                        <i class="fa fa-calendar"></i>
+                    </span>
+                    {%render_field form.diasVacaciones class="form-control "%}
+                </div>
+            </div>
+
+        </div>
+        <br><br><br>
+        <div class="row">
+            <button type="submit" class="col-12 btn btn-success">Generar planilla</button>
+        </div>
+    </form>
+</div>
+</div>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script>
+
+    $(document).ready(function() {
+        $("#datepicker").datepicker({
+            dateFormat: "yy-mm-dd",
+            showButtonPanel: true,
+            changeMonth: true,
+            changeYear: true
+        });
+    });
+    document.addEventListener("DOMContentLoaded", function () {
+    const receptorField = document.getElementById("id_receptor");
+    const selectReceptorButtons = document.querySelectorAll(
+            ".btn-select-receptor"
+          );
+    selectReceptorButtons.forEach((btn) => {
+        btn.addEventListener("click", function () {
+          const receptorValue =this.closest(".select-receptor").getAttribute("data-receptor");
+          receptorField.value = receptorValue;
+          $("#miModal").modal("hide");
+        });
+      });
+    });
+    
+</script>
+
+<div class="modal fade" id="miModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <!-- Contenido del modal -->
+        <div class="modal-header">
+          <h5 class="modal-title">Lista de empleados</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <table class="table">
+            <thead><th>ID</th><th>Nombre</th><th>Operacion</th></thead>
+            <tbody>
+                {%for empleado in Empleados%}
+                    <tr class="select-receptor" data-receptor="{{empleado.id}}"><td>{{empleado.id}}</td>
+                        <td>{{empleado.nombre}}</td>
+                        <td><button class="btn btn-primary btn-select-receptor">+</button></td>
+                    <button></button></tr>
+                {%endfor%}
+            </tbody>
+          </table>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+          <button type="button" class="btn btn-primary">Guardar cambios</button>
+        </div>
+      </div>
+    </div>
+  </div>
+{%endblock%}

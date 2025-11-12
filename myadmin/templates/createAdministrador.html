@@ -1,0 +1,102 @@
+{%extends 'base.html'%}
+{%load widget_tweaks%}
+
+{%block content%}
+<div class="p-5">
+    <div class="mb-5">
+        <h1><i class="fa-solid fa-user me-3"></i>Registrar Administrador</h1>
+    </div>
+
+    <div class="px-4">
+        <form id="orderForm" class="form form-control p-3" method="POST" />
+        {% csrf_token %}
+        <h3>Informacion general</h3>
+        <div class="row">
+            <div class="col-md-6">
+                <h5 class="mb-2">Nombre: </h5>
+                {%render_field form.first_name class="form-control mb-4"%}
+            </div>
+            <div class="col-md-6">
+                <h5 class="mb-2">Apellido: </h5>
+                {%render_field form.last_name class="form-control mb-4"%}
+            </div>
+            <div class="col-md-6">
+                <h5 class="mb-2">Direccion de correo electronico: </h5>
+                {%render_field form.email class="form-control mb-4"%}
+            </div>
+
+        </div>
+        <h3>Informacion de la cuenta</h3>
+        <div class="row">            
+            <div class="col-md-6">
+                <h5 class="mb-2">Nombre de Usuario: </h5>
+                {%render_field form.username class="form-control mb-4"%}
+            </div>
+            <div class="col-md-6">
+                <h5 class="mb-2">Contraseña: </h5>
+                {%render_field form.password class="form-control mb-4"%}
+            </div>            
+            <div class="col-md-6">
+                <h5 class="mb-2">Fecha de contratacion: </h5>
+                {%render_field form.fecha_contratacion class="form-control mb-3"%}
+            </div>
+            <div class="col-md-6">
+                <h5 class="mb-2">Confirmacion de contraseña: </h5>
+                {%render_field form.password_confirm class="form-control mb-4"%}
+            </div>
+
+
+
+        </div>
+        <button type="submit" class="btn btn-primary">Registrar administrador</button>
+        <a href="{%url 'myadmin:AdministradorList'%}"><button type="button" class="btn btn-secondary">Cancelar</button></a>
+        </form>
+    </div>
+
+<style>
+     .daterangepicker td {
+  line-height: 1.5; /* Ajusta el espaciado entre los números */
+  padding: 6px; /* Añade un espacio alrededor de los números */
+}
+  .daterangepicker .applyLabel {
+      color:blue
+}
+.daterangepicker input{
+    border-style:none
+}
+</style>
+</div>
+
+
+{% endblock %}
+
+{% block js %}
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        $("input[name=\"fecha_contratacion\"]").daterangepicker({
+            maxDate: moment().endOf('day'), // Fecha máxima es la fecha actual
+            startDate: moment().endOf('day'), // Fecha de inicio
+            singleDatePicker: true,
+            showDropdowns: true,
+            locale: {
+                format: 'MM/DD/YYYY',
+                separator: ' / ',
+                applyLabel: 'Seleccionar',
+                cancelLabel: 'Cancelar',
+                fromLabel: 'Desde',
+                toLabel: 'Hasta',
+                customRangeLabel: 'Personalizado',
+                weekLabel: 'S',
+                daysOfWeek: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'],
+                monthNames: [
+                    'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto',
+                    'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+                ],
+                firstDay: 1
+            }
+        });
+    });
+</script>
+
+
+{% endblock %}

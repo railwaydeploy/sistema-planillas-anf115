@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{%load filter_functions%}
+{% block content %}
+
+<div class="p-4">
+    <h1>Lista de administradores</h1>
+    <div class="row d-flex align-items-middle justify-content-center">
+        <div class="col-10">
+            <div class="input-group mb-3">
+                <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-magnifying-glass"></i></span>
+                <input type="text" class="form-control" id="searchInput" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
+            </div>
+        </div>
+        <div class="col-2">
+            <a href="{%url 'myadmin:AdministradorAdd'%}"><button class="btn btn-success">Agregar administrador</button></a>
+        </div>
+    </div>
+    <table class="table" id="table">
+        <thead class="table-dark">
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th >Nombre de usuario</th>
+            <th>Operacion</th>
+        </thead>
+        <tbody >
+            {%for object in object_list%}
+            <tr>
+                <td>{{forloop.counter}}</td>
+                <td>{{object.first_name}}</td>
+                <td>{{object.last_name}}</td>
+                <td>{{object.username}}</td>
+                <td><a href="{%url 'myadmin:AdministradorEdit' pk=object.pk%}"><button type="button" class="btn btn-warning"><i class="fa-solid fa-pen" style="color: #f7f7f7;"></i></button></a>
+                    <a href="{%url 'myadmin:AdministradorDelete' pk=object.pk%}"><button type="button" class="btn btn-danger"><i class="fa-solid fa-xmark" style="color: #ffffff;"></i></button></a>
+                    <button class="btn btn-success"><i class="fa-solid fa-file" style="color: #fcfcfc;"></i></button></td>
+            </tr>
+            {%endfor%}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+
+{% block js %}
+<script>
+    var input = document.getElementById('searchInput');
+var table = document.querySelector('table');
+
+// Agrega un evento de escucha al campo de búsqueda
+input.addEventListener('input', function () {
+    var query = input.value.toLowerCase(); // Obtén el valor de búsqueda en minúsculas
+    var rows = table.querySelectorAll('tbody tr'); // Obtén todas las filas de datos
+
+    // Itera a través de las filas y muestra/oculta según la consulta de búsqueda
+    rows.forEach(function (row) {
+        var data = row.textContent.toLowerCase();
+        if (data.includes(query)) {
+            row.style.display = ''; // Muestra la fila si coincide
+        } else {
+            row.style.display = 'none'; // Oculta la fila si no coincide
+        }
+    });
+});
+</script>
+{% endblock %}

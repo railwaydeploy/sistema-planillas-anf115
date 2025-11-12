@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+    {%load static%}
+<head>
+    <style>
+        .page-break {
+            page-break-before: always;
+        }
+        .title {
+            padding-top: 10px;
+            padding-left: 5px;
+            font-size: 20px;
+        }
+        .title-group {
+            font-size: 15px;
+            font-style: italic;
+            background-color: lightsteelblue;
+            padding-top: 8px;
+            padding-left: 3px;
+        }
+        
+        .header-container {
+            position: relative;
+        }
+
+        /* Estilo para la imagen */
+
+        .header-image1 {
+            width: 10px;
+            height: 10px;
+        }
+
+        .image-text-group { /* Espacio entre la imagen y el texto */
+        }
+        /* Estilo para el encabezado h1 */
+        h1 {
+            margin-left: 100px; /* Deja espacio a la derecha de la imagen para el h1 */
+            display: inline-block; /* Permite que el h1 esté en la misma línea que la imagen */
+        }
+        .h2 {
+            font-size: 13px;
+        }
+        
+        .subrayado{
+            text-decoration: underline;
+        }
+        .table1{
+            align-items: center;
+            border-spacing: 0;
+            border-collapse: collapse;
+            width: 100%;
+            margin: 0 auto;
+
+        }
+        .table1 th{
+            padding: 7px;
+            background-color: gray;
+            color:white;
+            text-align: center;
+            border: 1px solid #000;
+        }
+        .table1 td{
+            padding: 5px;
+            text-align: center;
+            border: 1px solid #000;
+        }
+        .mytable2 td{
+            padding:2px;
+        }
+
+        td.nombre {
+        white-space: nowrap; /* Evita que el texto se divida en varias líneas */
+        overflow: hidden; /* Oculta el exceso de texto que no cabe en la celda */
+        text-overflow: ellipsis; /* Agrega puntos suspensivos (...) al final del texto que no cabe */
+        }
+  
+
+        /* Estilo para las filas impares (excluyendo la última fila) */
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            background: steelblue;
+        }
+
+        .item {
+            background: grey;
+        }
+        .CenterDiv{
+            border-radius:4px;
+            max-width:1600px; 
+            width:100%;
+            margin:0 auto;
+        }
+
+
+        .brTables{
+            padding: -3px;
+        }
+
+
+        /* Estilos para la segunda tabla */
+    </style>
+</head>
+{%block content%}
+<table style="border:0px">
+    <tbody>
+        <tr >
+            <td style="width:120px">
+                <img style="width:120px;height:120px" src="http://localhost:8000{%static 'assets/img/logo.jpg'%}" alt="asdasd" class="header-image">
+            </td>
+            <td>
+                <h1 style="font-size:30px;">Lubriaccesorios España</h1>
+                <p>
+        
+                    <div style="font-size:16px;border-style:none;">
+                        <b>Lubriaccesorios España</b>
+                    </div>
+                    
+                    <span class="image-text-group">
+                        <b>Telefono:</b> 7105-6703
+                    </span>
+                    <span class="image-text-group">
+                        <b>Email:</b> gptinnova2025@gmail.com
+                    </span>
+                    
+                    <span class="image-text-group">
+                        <b>Instagram:</b> leryunard
+                    </span> 
+                    <div class="">
+                        <span><b>Dirección:</b> Clle. del Cantábrico,Peatonal UCA.</span>
+                    </div>  
+                </p>
+            </td>
+        </tr>
+    </tobdy>
+
+</table>
+<div style="background-color:gray" class="width:100%">
+    <br>
+</div>
+<div style="margin-top:20px;font-size:12px">
+    <b>Nombre del empleado: </b><span>Moran Portillo, Kevin Steven </span><b>&nbsp Telefono: </b><span>7851-2257 </span><br>
+    <b>Dirección: </b><span>KHJASDJKLASDJKLHASDJKL</span>
+</div>
+
+<br>
+<table style="margin-bottom:0px" class="table1">
+    <tr>
+        <th>#</th>
+        <th>Nombre</th>
+        <th>Sueldo Base Diario</th>
+        <th>Dias trabajados</th>
+        <th>Horas extras Diurnas</th>
+        <th>Horas extras nocturnas</th>
+        <th>Total horas extras</th>
+        <th>Sub Total</th>
+    </tr>
+    <tr>
+        <td>1</td>
+        <td class="space">Kevin Moran</td>
+        <td>$100</td>
+        <td>4</td>
+        <td>5</td>
+        <td>6</td>
+        <td>7</td>
+        <td>8</td>
+    </tr>
+</table>    
+<table stlye="" class="mytable2">
+    <thead>
+        <th style="width:500px"></th>
+        <th></th>
+    </thead>
+    <tbody>
+    <tr>
+        <td style="text-align:right" class=""><b>ISSS: </b></td>
+        <td style="text-align:center; border:0.5px solid black">1</td>
+    </tr>
+    <tr>
+        <td style="text-align:right "><b>AFP: </b></td>
+        <td style="text-align:center; border:0.5px solid black">4</td>
+    </tr>
+    <tr>
+        <td style="text-align:right"><b>RENTA: </b></td>
+        <td style="text-align:center; border:0.5px solid black">3</td>
+    </tr>
+    <tr>
+        <td style="text-align:right"><b>Otras deduciones:</b> </td>
+        <td style="text-align:center; border:0.5px solid black">4</td>
+    </tr>
+    <tr>
+         <td style="text-align:right"><b>Liquido a pagar: </b></td>
+         <td style="text-align:center; border:0.5px solid black"><b>$ 32325.00</b></td>
+    </tr>
+</tbody>
+</table>
+<table style="margin-top:30px;" class="">
+    <tr style="background-color:gray;height:35px">
+        <td>
+            <h1 style="color:white;font-size:20px">&nbsp Resumen</h1>
+        </td>
+
+    </tr>
+</table>
+<div class="CenterDiv">
+    <h3><b>Total a pagar: </b>$32325.00</h3>
+    <p class="subrayado"><b>Periodo trabajado desde: </b>26 del Junio del 2022</p>
+    <p class="subrayado"><b>Periodo trabajado hasta: </b>26 de Julio del 2022</p>
+
+<div id="footer_content">
+    <p><b>Realizado Por: </b>Kevin Morán <b> | Fecha de impresión: </b> 23/05/2023</p>
+</div>
+
+</div>
+{%endblock%}
+
