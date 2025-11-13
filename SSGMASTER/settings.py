@@ -33,6 +33,8 @@ DEBUG = os.environ.get('DEBUG', 'True').lower() in ('true', '1', 'yes')
 
 # Hosts
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '.127.0.0.1,.localhost').split(',')
+# Limpiar espacios en blanco de cada host
+ALLOWED_HOSTS = [host.strip() for host in ALLOWED_HOSTS if host.strip()]
 
 # Static files (development)
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
