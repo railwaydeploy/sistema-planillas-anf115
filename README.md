@@ -1,4 +1,4 @@
-DEV_SETUP.md
+Implementación del Proyecto en Entorno Local (Windows)
 =============
 
 Este archivo contiene los pasos para levantar el proyecto en un entorno local Windows (también válidos en bash/WSL con pequeñas diferencias).
@@ -79,13 +79,8 @@ exit()
 python manage.py runserver 8001
 ```
 
-Notas y recomendaciones
+**Notas y recomendaciones**
 - Si usas Windows y PowerShell y recibes un error de ejecución al activar `.venv\Scripts\Activate.ps1`, ejecuta en PowerShell (con permisos de admin si es necesario):
   Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 - Si utilizas Laragon o un Python con `python311._pth` y ves que pip no está disponible, usa `get-pip.py` para instalar pip en esa instalación, o crea y usa `.venv` con `virtualenv` como hicimos en la sesión.
 - Para servir estáticos en producción usa WhiteNoise o configura un storage externo (S3).
-
-Si quieres, puedo:
-- Crear un archivo `start_dev.bat` para Windows que haga la activación del venv y arranque el servidor en 8001.
-- Aplicar el cambio en `SSGMASTER/settings.py` para forzar SQLite local si me lo autoriza.  
-- Ejecutar los comandos aquí para ti (crear superusuario, arrancar servidor, etc.).
