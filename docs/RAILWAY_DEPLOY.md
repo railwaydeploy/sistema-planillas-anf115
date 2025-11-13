@@ -40,7 +40,7 @@ ALLOWED_HOSTS=tu-app.up.railway.app
 ```
 
 **Importante:**
-- Para `SECRET_KEY`: genera una clave segura (puedes usar https://djecrety.ir/ o ejecutar en Python: `from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())`)
+- Para `SECRET_KEY`: genera una clave segura (puedes usar https://djecrety.ir/ o ejecutar en Python: `from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())`ó `python -c "import secrets, string; chars = string.ascii_letters + string.digits + '-_'; print(''.join(secrets.choice(chars) for i in range(50)))"`)
 - Para `ALLOWED_HOSTS`: Railway te dará una URL cuando despliegues (ej: `sistema-planillas-production.up.railway.app`). Usa esa URL aquí (sin http://).
 - `DATABASE_URL` ya está configurada automáticamente por el plugin de PostgreSQL.
 
@@ -75,9 +75,9 @@ Luego ejecuta:
 ```bash
 railway login
 railway link  # selecciona tu proyecto
-railway run python manage.py migrate
-railway run python manage.py collectstatic --noinput
-railway run python manage.py createsuperuser  # para crear usuario admin
+python manage.py migrate
+python manage.py collectstatic --noinput
+python manage.py createsuperuser  # para crear usuario admin
 ```
 
 **Opción B: Desde la consola web de Railway**
@@ -179,5 +179,3 @@ railway open
 ```
 
 ---
-
-¡Listo! Tu aplicación Django debería estar corriendo en Railway con PostgreSQL, sirviendo archivos estáticos con WhiteNoise y lista para producción.
