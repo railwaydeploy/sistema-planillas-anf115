@@ -1,42 +1,46 @@
 {% extends 'base.html' %}
-{%load filter_functions%}{%load widget_tweaks%}
+{% load filter_functions %}{% load widget_tweaks %}
 {% block content %}
 
 
 
 
-<div class="p-4">
-    <h1>Planilla de pago</h1>
+    <div class="p-4">
+        <h1>Planilla de pago</h1>
 
-    <div class="row justify-content-end mt-3">
-        <div class="col-auto">
-            <a href="{%url 'myadmin:PlanillaForm'%}">
-                <button class="btn btn-success">Agregar a planilla</button>
-            </a>
+        <div class="row justify-content-end mt-3">
+            <div class="col-auto">
+                <a href="{% url 'myadmin:PlanillaForm' %}">
+                    <button class="btn btn-success">Agregar a planilla</button>
+                </a>
+            </div>
         </div>
-    </div>
-    
-    <div class="row justify-content-between">
-        <form method="POST" class="form-inline">
-            {%csrf_token%}
-            <div class="form-group">
-                <label for="mes">Fecha inicio:</label>
-                {%render_field form.fecha_ini class="form-control"%}
-                </select>
-            </div>
-            
-            <div class="form-group">
-                <label for="anio">Fecha fin:</label>
-                {%render_field form.fecha_fin class="form-control"%}
-            </div>
-            <br>
-            <button type="submit" class="btn btn-primary ml-2">Filtrar</button>
-        </form>
-    </div>
-    
 
-    <table class="table" id="table">
-        <thead class="table-dark">
+        <div class="row justify-content-between align-items-end">
+            <form method="GET" class="form-inline" novalidate>
+                <div class="form-group mr-2">
+                    <label for="{{ form.fecha_ini.id_for_label }}" class="mr-2">Fecha inicio:</label>
+                    {% render_field form.fecha_ini type="date" class="form-control" %}
+                </div>
+
+                <div class="form-group mr-2">
+                    <label for="{{ form.fecha_fin.id_for_label }}" class="mr-2">Fecha fin:</label>
+                    {% render_field form.fecha_fin type="date" class="form-control" %}
+                </div>
+                <button type="submit" class="btn btn-primary ml-2">Filtrar</button>
+            </form>
+
+            <div class="form-group">
+                <label for="searchInput" class="mr-2">Buscar:</label>
+                <input type="text" id="searchInput" class="form-control" placeholder="Buscar en la tabla..."
+                       autocomplete="off"
+                       oninput="(function(i){const q=i.value.toLowerCase();document.querySelectorAll('#table tbody tr').forEach(function(tr){tr.style.display=tr.textContent.toLowerCase().includes(q)?'':'none';});})(this)">
+            </div>
+        </div>
+
+
+        <table class="table" id="table">
+            <thead class="table-dark">
             <th>ID</th>
             <th>Nombre</th>
             <th>Salario base</th>
@@ -45,46 +49,54 @@
             <th>ISSS</th>
             <th>Renta</th>
             <th>Operacion</th>
-        </thead>
-        <tbody >
-            {%for object in object_list%}
-            <tr>
-                <td>{{forloop.counter}}</td>
-                <td>{{object.FK_empleado.nombre}}</td>
-                <td>{{object.FK_empleado.salario_base}}</td>
-                <td>{{object.Liquido_pagar}}</td>
-                <td>{{object.AFP}}</td>
-                <td>{{object.ISSS}}</td>
-                <td>{{object.RENTA}}</td>
-                <td><a href=""><button type="button" class="btn btn-warning"><i class="fa-solid fa-pen" style="color: #f7f7f7;"></i></button></a>
-                    <a href=""><button type="button" class="btn btn-danger"><i class="fa-solid fa-xmark" style="color: #ffffff;"></i></button></a>
-                    <button class="btn btn-success"><i class="fa-solid fa-file" style="color: #fcfcfc;"></i></button></td>
-            </tr>
-            {%endfor%}
-        </tbody>
-    </table>
-</div>
+            </thead>
+            <tbody>
+            {% for object in object_list %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ object.FK_empleado.nombre }}</td>
+                    <td>{{ object.FK_empleado.salario_base }}</td>
+                    <td>{{ object.Liquido_pagar }}</td>
+                    <td>{{ object.AFP }}</td>
+                    <td>{{ object.ISSS }}</td>
+                    <td>{{ object.RENTA }}</td>
+                    <td><a href="">
+                        <button type="button" class="btn btn-warning"><i class="fa-solid fa-pen"
+                                                                         style="color: #f7f7f7;"></i></button>
+                    </a>
+                        <a href="">
+                            <button type="button" class="btn btn-danger"><i class="fa-solid fa-xmark"
+                                                                            style="color: #ffffff;"></i></button>
+                        </a>
+                        <button class="btn btn-success"><i class="fa-solid fa-file" style="color: #fcfcfc;"></i>
+                        </button>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
 {% endblock %}
 
 {% block js %}
-<script>
-    var input = document.getElementById('searchInput');
-var table = document.querySelector('table');
+    <script>
+        var input = document.getElementById('searchInput');
+        var table = document.querySelector('table');
 
-// Agrega un evento de escucha al campo de búsqueda
-input.addEventListener('input', function () {
-    var query = input.value.toLowerCase(); // Obtén el valor de búsqueda en minúsculas
-    var rows = table.querySelectorAll('tbody tr'); // Obtén todas las filas de datos
+        // Agrega un evento de escucha al campo de búsqueda
+        input.addEventListener('input', function () {
+            var query = input.value.toLowerCase(); // Obtén el valor de búsqueda en minúsculas
+            var rows = table.querySelectorAll('tbody tr'); // Obtén todas las filas de datos
 
-    // Itera a través de las filas y muestra/oculta según la consulta de búsqueda
-    rows.forEach(function (row) {
-        var data = row.textContent.toLowerCase();
-        if (data.includes(query)) {
-            row.style.display = ''; // Muestra la fila si coincide
-        } else {
-            row.style.display = 'none'; // Oculta la fila si no coincide
-        }
-    });
-});
-</script>
+            // Itera a través de las filas y muestra/oculta según la consulta de búsqueda
+            rows.forEach(function (row) {
+                var data = row.textContent.toLowerCase();
+                if (data.includes(query)) {
+                    row.style.display = ''; // Muestra la fila si coincide
+                } else {
+                    row.style.display = 'none'; // Oculta la fila si no coincide
+                }
+            });
+        });
+    </script>
 {% endblock %}
