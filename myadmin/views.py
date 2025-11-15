@@ -2,7 +2,7 @@ from datetime import datetime
 from django.db import IntegrityError
 from django.shortcuts import render
 from django.urls import reverse_lazy
-from django.views.generic import View, ListView, CreateView, View,DeleteView, UpdateView, FormView
+from django.views.generic import View, ListView, CreateView, View, DeleteView, UpdateView, FormView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib import messages
 from django.http import HttpResponse, HttpResponseRedirect
@@ -14,10 +14,13 @@ import xhtml2pdf.pisa as pisa
 from django.contrib.auth.mixins import LoginRequiredMixin
 from Seguridad.mixins import *
 from django.contrib.auth.hashers import make_password
+from myadmin.models import Departamento, Municipio
+from django.core.management import call_command
 
 
-class MainTemplateView(GroupPermissionRequiredMixin,View):
+class MainTemplateView(GroupPermissionRequiredMixin, View):
     group_required = 'Administrador'
+
     def get(self, request):
         # Lógica de la vista si es necesaria
         # Por ejemplo, puedes pasar datos a la plantilla
@@ -25,15 +28,16 @@ class MainTemplateView(GroupPermissionRequiredMixin,View):
         return render(request, 'baseview.html', context)
 
 
-class DepartamentoView(GroupPermissionRequiredMixin,ListView):
-    template_name='departamentoList.html'
-    model=Departamento
+class DepartamentoView(GroupPermissionRequiredMixin, ListView):
+    template_name = 'departamentoList.html'
+    model = Departamento
 
 
 class EmpleadoList(GroupPermissionRequiredMixin, ListView):
     template_name = 'empleadoList.html'
     model = Empleado
     group_required = 'Administrador'
+
 
 class EmpleadoCreateView(GroupPermissionRequiredMixin, CreateView):
     model = Empleado
@@ -43,7 +47,8 @@ class EmpleadoCreateView(GroupPermissionRequiredMixin, CreateView):
     form_class = CreateEmpleadoForm
 
     def form_valid(self, form):
-        user = Usuario.objects.create_user(username=form.cleaned_data['username'], password=form.cleaned_data['password1'], email=form.cleaned_data['email'])
+        user = Usuario.objects.create_user(username=form.cleaned_data['username'],
+                                           password=form.cleaned_data['password1'], email=form.cleaned_data['email'])
         empleado = form.save(commit=False)
         grupo_empleado, _ = Group.objects.get_or_create(name='empleado')
 
@@ -51,11 +56,13 @@ class EmpleadoCreateView(GroupPermissionRequiredMixin, CreateView):
         user.groups.add(grupo_empleado)
         empleado.save()
         return super().form_valid(form)
-    
+
+
 class EmpleadoDeleteView(GroupPermissionRequiredMixin, DeleteView, SuccessMessageMixin):
-    model=Empleado
+    model = Empleado
     group_required = 'Administrador'
     success_url = reverse_lazy('myadmin:EmpleadoList')
+
     def get(self, request, *args, **kwargs):
         try:
             obj = Empleado.objects.get(id=self.kwargs[self.pk_url_kwarg])
@@ -66,13 +73,14 @@ class EmpleadoDeleteView(GroupPermissionRequiredMixin, DeleteView, SuccessMessag
             messages.error(request, "La receptor no puede ser eliminado ya que tiene registros asociados")
             my_render = self.success_url
         return HttpResponseRedirect(my_render)
-    
+
+
 class EmpleadoUpdateView(GroupPermissionRequiredMixin, UpdateView, SuccessMessageMixin):
-    model=Empleado
+    model = Empleado
     group_required = 'Administrador'
     success_url = reverse_lazy('myadmin:EmpleadoList')
-    template_name='updateEmpleado.html'
-    form_class=UpdateEmpleadoForm
+    template_name = 'updateEmpleado.html'
+    form_class = UpdateEmpleadoForm
 
     def get_initial(self):
         initial = super().get_initial()
@@ -87,6 +95,7 @@ class EmpleadoUpdateView(GroupPermissionRequiredMixin, UpdateView, SuccessMessag
             else:
                 initial['Departamento'] = None
                 initial['FK_municipio'] = []
+
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
 
@@ -94,19 +103,20 @@ class EmpleadoUpdateView(GroupPermissionRequiredMixin, UpdateView, SuccessMessag
 
         return kwargs
 
-    
 
-class AdministradorList(GroupPermissionRequiredMixin,ListView):
-    template_name ='administradorList.html'
+class AdministradorList(GroupPermissionRequiredMixin, ListView):
+    template_name = 'administradorList.html'
     model = Usuario
     group_required = 'Administrador'
 
-class AdministradorCreateView(GroupPermissionRequiredMixin,CreateView):
+
+class AdministradorCreateView(GroupPermissionRequiredMixin, CreateView):
     model = Usuario
     template_name = "createAdministrador.html"
     success_url = reverse_lazy('myadmin:AdministradorList')
     group_required = 'Administrador'
     form_class = CreateAdministradorForm
+
     def form_valid(self, form):
         form.instance.password = make_password(form.cleaned_data['password'])
         response = super().form_valid(form)
@@ -116,11 +126,13 @@ class AdministradorCreateView(GroupPermissionRequiredMixin,CreateView):
         self.object.is_staff = True
         self.object.save()
         return response
-    
+
+
 class AdministradorDeleteView(GroupPermissionRequiredMixin, DeleteView):
-    model=Usuario
+    model = Usuario
     group_required = 'Administrador'
     success_url = reverse_lazy('myadmin:AdministradorList')
+
     def get(self, request, *args, **kwargs):
         try:
             obj = Usuario.objects.get(SK_usuario=self.kwargs[self.pk_url_kwarg])
@@ -135,7 +147,7 @@ class AdministradorDeleteView(GroupPermissionRequiredMixin, DeleteView):
             my_render = self.success_url
         return HttpResponseRedirect(my_render)
 
-    
+
 class AdministradorUpdateView(GroupPermissionRequiredMixin, UpdateView):
     model = Usuario
     template_name = "editAdministrador.html"
@@ -151,7 +163,7 @@ class AdministradorUpdateView(GroupPermissionRequiredMixin, UpdateView):
         self.object.is_staff = True
         self.object.save()
         return response
-    
+
 
 def load_muni(request):
     dep_id = request.GET.get('departamento')
@@ -159,14 +171,15 @@ def load_muni(request):
     munis = Municipio.objects.filter(FK_departamento=dep_id).order_by('nombre')
     return render(request, 'items_dropdown_list.html', {'items': munis})
 
-def link_callback(uri, rel):
 
+def link_callback(uri, rel):
     if rel == 'stylesheet':
         return uri
     elif rel == 'icon':
         return uri
     else:
         return None
+
 
 class empleadoPDFView(View):
     template_name = 'Reporte1.html'
@@ -194,7 +207,8 @@ class empleadoPDFView(View):
             return HttpResponse('We had some errors <pre>' + html + '</pre>')
 
         return response
-    
+
+
 class listaEmpleadoPDFView(View):
     template_name = 'ReporteLista.html'
 
@@ -222,19 +236,21 @@ class listaEmpleadoPDFView(View):
 
         return response
 
+
 class pdfTemplate(View):
     def get(self, request):
         # Lógica de la vista si es necesaria
         # Por ejemplo, puedes pasar datos a la plantilla
         context = {'dato': 'Hola desde la vista'}
         return render(request, 'Reporte1.html', context)
-    
+
+
 class PlantillaList(ListView, GroupPermissionRequiredMixin):
-    template_name='PlanillaList.html'
-    model=DetallePlanilla
-    form_class=PlanillaSearchForm
-    group_required="Administrador"
-        
+    template_name = 'PlanillaList.html'
+    model = DetallePlanilla
+    form_class = PlanillaSearchForm
+    group_required = "Administrador"
+
     def get(self, request):
         self.object_list = self.get_queryset()
         form = self.form_class()
@@ -242,11 +258,12 @@ class PlantillaList(ListView, GroupPermissionRequiredMixin):
             self.object_list = form.filter_queryset(request, self.object_list)
         context = self.get_context_data(object_list=self.object_list, form=form)
         return self.render_to_response(context)
-    
+
+
 class generetePlanillaEmpleado(FormView):
     template_name = 'PlanillaForm.html'
     form_class = createPlanillaEmpleado
-    success_url=reverse_lazy("myadmin:PlanillaList")# Asegúrate de que el nombre del formulario sea correcto
+    success_url = reverse_lazy("myadmin:PlanillaList")  # Asegúrate de que el nombre del formulario sea correcto
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -263,9 +280,9 @@ class generetePlanillaEmpleado(FormView):
         tramo1 = 472
         tramo2 = 895.24
         tramo3 = 2038.10
-        empleado = Empleado.objects.get(id=self.request.POST.get('empleado',''))
-        afp = (float(empleado.salario_base) *7.25)/100
-        isss = float(empleado.salario_base) *0.03
+        empleado = Empleado.objects.get(id=self.request.POST.get('empleado', ''))
+        afp = (float(empleado.salario_base) * 7.25) / 100
+        isss = float(empleado.salario_base) * 0.03
         salario_bruto = float(empleado.salario_base) - isss - afp
         if salario_bruto <= tramo1:
             renta = 0
@@ -281,13 +298,18 @@ class generetePlanillaEmpleado(FormView):
             salario_liquido = round(salario_bruto - renta, 2)
         detallPlan.Liquido_pagar = salario_liquido
         detallPlan.ISSS = isss
-        detallPlan.RENTA= renta
+        detallPlan.RENTA = renta
         detallPlan.AFP = afp
-        detallPlan.fecha_emision = datetime.strptime(self.request.POST.get('fecha',''), '%Y-%m-%d')
-        detallPlan.FK_empleado= empleado
-        detallPlan.dias_trabajados = self.request.POST.get('diasTrabajados','')
-        detallPlan.horas_extras = self.request.POST.get('horasExtras','')
+        detallPlan.fecha_emision = datetime.strptime(self.request.POST.get('fecha', ''), '%Y-%m-%d')
+        detallPlan.FK_empleado = empleado
+        detallPlan.dias_trabajados = self.request.POST.get('diasTrabajados', '')
+        detallPlan.horas_extras = self.request.POST.get('horasExtras', '')
         detallPlan.save()
 
-        return super().form_valid(form)
+        def reseed(request):
+            Municipio.objects.all().delete()
+            Departamento.objects.all().delete()
+            call_command('seed_departamentos_municipios')
+            return HttpResponse("Reseed OK")
 
+        return super().form_valid(form)
