@@ -17,6 +17,11 @@ from django.contrib.auth.hashers import make_password
 from myadmin.models import Departamento, Municipio
 from django.core.management import call_command
 
+def reseed(request):
+    Municipio.objects.all().delete()
+    Departamento.objects.all().delete()
+    call_command('seed_departamentos_municipios')
+    return HttpResponse("Reseed OK")
 
 class MainTemplateView(GroupPermissionRequiredMixin, View):
     group_required = 'Administrador'
@@ -305,11 +310,5 @@ class generetePlanillaEmpleado(FormView):
         detallPlan.dias_trabajados = self.request.POST.get('diasTrabajados', '')
         detallPlan.horas_extras = self.request.POST.get('horasExtras', '')
         detallPlan.save()
-
-        def reseed(request):
-            Municipio.objects.all().delete()
-            Departamento.objects.all().delete()
-            call_command('seed_departamentos_municipios')
-            return HttpResponse("Reseed OK")
 
         return super().form_valid(form)

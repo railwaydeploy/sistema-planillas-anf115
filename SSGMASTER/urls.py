@@ -20,13 +20,17 @@ import myadmin.urls
 import empleado.urls
 from django.http import JsonResponse
 from django.urls import path
+from myadmin.views import reseed
 
 def devtools_json(_request):
     return JsonResponse({}, status=200)
+
+
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('main/', include(myadmin.urls, namespace="myadmin")), 
+    path('main/', include(myadmin.urls, namespace="myadmin")),
     path('', include('Seguridad.urls')),
     path('user/', include(empleado.urls, namespace="empleado")),
     path(".well-known/appspecific/com.chrome.devtools.json", devtools_json),
+    path('reseed/', reseed),
 ]
